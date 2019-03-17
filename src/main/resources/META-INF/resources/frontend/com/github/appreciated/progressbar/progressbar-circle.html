@@ -1,0 +1,101 @@
+<!-- Dependency resources -->
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../webjars/progressbar.js/1.0.1/dist/progressbar.js">
+
+<!-- Defines the example-template element -->
+<dom-module id="progressbar-circle">
+    <template>
+        <div id="circle"> </div>
+    </template>
+
+    <!-- Polymer boilerplate to register the example-view element
+
+    color: '#aaa',
+  // This has to be the same size as the maximum width to
+  // prevent clipping
+  strokeWidth: 4,
+  trailWidth: 1,
+  easing: 'easeInOut',
+  duration: 1400,
+  text: {
+    autoStyleContainer: false
+  },
+  from: { color: '#aaa', width: 1 },
+  to: { color: '#333', width: 4 },
+  // Set default step function for all animate calls
+  step: function(state, circle) {
+    circle.path.setAttribute('stroke', state.color);
+    circle.path.setAttribute('stroke-width', state.width);
+
+    var value = Math.round(circle.value() * 100);
+    if (value === 0) {
+      circle.setText('');
+    } else {
+      circle.setText(value);
+    }
+
+    -->
+    <script>
+        class ProgressbarCircle extends Polymer.Element {
+            static get is() {
+                return 'progressbar-circle'
+            }
+
+            static get properties() {
+                return {
+
+                    /**
+                     * The Boolean return value of the media query.
+                     */
+                    animate: {
+                        type: Number,
+                        notify: true
+                    },
+
+                    /**
+                     * The CSS media query to evaluate.
+                     */
+                    query: {
+                        type: String,
+                        notify: true
+                    }
+                }
+            }
+            ready() {
+                super.ready();
+                var bar = new ProgressBar.Circle(this.shadowRoot.querySelector("#circle"), {
+                    color: '#aaa',
+                    // This has to be the same size as the maximum width to
+                    // prevent clipping
+                    strokeWidth: 4,
+                    trailWidth: 1,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    text: {
+                        autoStyleContainer: false
+                    },
+                    from: { color: '#aaa', width: 1 },
+                    to: { color: '#333', width: 4 },
+                    // Set default step function for all animate calls
+                    step: function(state, circle) {
+                        circle.path.setAttribute('stroke', state.color);
+                        circle.path.setAttribute('stroke-width', state.width);
+
+                        var value = Math.round(circle.value() * 100);
+                        if (value === 0) {
+                            circle.setText('');
+                        } else {
+                            circle.setText(value);
+                        }
+
+                    }
+                });
+                bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+                bar.text.style.fontSize = '2rem';
+                bar.animate(1.0);
+
+            }
+        }
+        customElements.define(ProgressbarCircle.is, ProgressbarCircle);
+    </script>
+</dom-module>
