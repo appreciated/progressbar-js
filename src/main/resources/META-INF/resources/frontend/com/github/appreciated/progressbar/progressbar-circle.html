@@ -3,7 +3,13 @@
 <dom-module id="progressbar-circle">
     <template>
         <style>
-            ::slotted(svg) { overflow: visible; }
+            ::slotted(svg) {
+                overflow: visible;
+            }
+
+            ::slotted(.progressbar-text) {
+                white-space: nowrap;
+            }
         </style>
         <slot></slot>
     </template>
@@ -70,6 +76,8 @@
                 var stepConfig = null;
 
                 var drawText = this.drawNumber;
+                var numberPrefix = this.numberPrefix;
+                var numberSuffix = this.numberSuffix;
                 if ((this.fromColor && this.toColor) || (this.fromStrokeWidth && this.toStrokeWidth)) {
                     fromConfig = {};
                     toConfig = {};
@@ -78,10 +86,11 @@
                         circle.path.setAttribute('stroke-width', state.width);
                         if (drawText) {
                             var value = Math.round(circle.value() * 100);
+                            console.log(value);
                             if (value === 0) {
                                 circle.setText('');
                             } else {
-                                circle.setText(this.numberPrefix + value + this.numberSuffix);
+                                circle.setText(numberPrefix + "" + value + "" + numberSuffix);
                             }
                         }
                     }
@@ -96,20 +105,29 @@
                     fromConfig.width = this.fromStrokeWidth;
                     toConfig.width = this.toStrokeWidth;
                 }
-
-                var bar = new ProgressBar.Circle(this, {
-                    color: this.color,
-                    trailColor: this.trailColor,
-                    strokeWidth: this.strokeWidth,
-                    trailWidth: this.trailWidth,
-                    easing: this.easing,
-                    duration: this.duration,
-                    from: fromConfig,
-                    to: toConfig,
-                    step: stepConfig
-                });
-
-                //bar.set(this.animate);
+                if (!fromConfig || !toConfig) {
+                    var bar = new ProgressBar.Circle(this, {
+                        color: this.color,
+                        trailColor: this.trailColor,
+                        strokeWidth: this.strokeWidth,
+                        trailWidth: this.trailWidth,
+                        easing: this.easing,
+                        duration: this.duration
+                    });
+                } else {
+                    var bar = new ProgressBar.Circle(this, {
+                        color: this.color,
+                        trailColor: this.trailColor,
+                        strokeWidth: this.strokeWidth,
+                        trailWidth: this.trailWidth,
+                        easing: this.easing,
+                        duration: this.duration,
+                        from: fromConfig,
+                        to: toConfig,
+                        step: stepConfig
+                    });
+                }
+                bar.animate(this.animate);
 
                 this.addEventListener('animate-changed', function (ev) {
                     bar.animate(this.animate);

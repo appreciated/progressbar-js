@@ -15,6 +15,6 @@ public class DemoView extends VerticalLayout {
         circle = new ProgressCircle();
         add(circle);
         setSizeFull();
-        circle.setProgress(1.0);
+        circle.setProgress(0.75);
     }
 }

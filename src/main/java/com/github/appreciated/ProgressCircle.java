@@ -19,15 +19,10 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
                 .set("overflow", "visible");
         setStrokeWidth(2);
         setTrailWidth(1);
-        setColor("green");
+        setColor("var(--lumo-primary-color)");
         setEasing("easeInOut");
-        setTrailColor("#fafafa");
-        setDuration(1400);
-        setDrawNumber(false);
-        setFromColor("#aaa");
-        setToColor("#f00");
-        setFromStrokeWidth(1);
-        setToStrokeWidth(3);
+        setTrailColor("var(--lumo-contrast-10pct)");
+        setDuration(1000);
     }
 
     public void setStrokeWidth(double strokeWidth) {
@@ -78,6 +73,14 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
         getModel().setAnimate(progress);
     }
 
+    public void setNumberPrefix(String prefix) {
+        getModel().setNumberPrefix(prefix);
+    }
+
+    public void setNumberSuffix(String suffix) {
+        getModel().setNumberSuffix(suffix);
+    }
+
     public interface ProgressCircleModel extends TemplateModel {
         double getAnimate();
 
@@ -126,6 +129,15 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
         boolean getDrawNumber();
 
         void setDrawNumber(boolean drawNumber);
+
+        String getNumberPrefix();
+
+        void setNumberPrefix(String numberPrefix);
+
+        String getNumberSuffix();
+
+        void setNumberSuffix(String numberSuffix);
+
     }
 }
 
