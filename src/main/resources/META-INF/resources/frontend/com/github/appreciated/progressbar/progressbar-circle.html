@@ -1,40 +1,6 @@
-<!-- Dependency resources -->
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <script src="../../../../../webjars/progressbar.js/1.0.1/dist/progressbar.js"></script>
-
-<!-- Defines the example-template element -->
 <dom-module id="progressbar-circle">
-    <template>
-        <div id="circle"> </div>
-    </template>
-
-    <!-- Polymer boilerplate to register the example-view element
-
-    color: '#aaa',
-  // This has to be the same size as the maximum width to
-  // prevent clipping
-  strokeWidth: 4,
-  trailWidth: 1,
-  easing: 'easeInOut',
-  duration: 1400,
-  text: {
-    autoStyleContainer: false
-  },
-  from: { color: '#aaa', width: 1 },
-  to: { color: '#333', width: 4 },
-  // Set default step function for all animate calls
-  step: function(state, circle) {
-    circle.path.setAttribute('stroke', state.color);
-    circle.path.setAttribute('stroke-width', state.width);
-
-    var value = Math.round(circle.value() * 100);
-    if (value === 0) {
-      circle.setText('');
-    } else {
-      circle.setText(value);
-    }
-
-    -->
     <script>
         class ProgressbarCircle extends Polymer.Element {
             static get is() {
@@ -43,59 +9,108 @@
 
             static get properties() {
                 return {
-
-                    /**
-                     * The Boolean return value of the media query.
-                     */
+                    color: {
+                        type: String
+                    },
+                    trailColor: {
+                        type: String
+                    },
+                    strokeWidth: {
+                        type: Number
+                    },
+                    trailWidth: {
+                        type: Number
+                    },
+                    easing: {
+                        type: String
+                    },
+                    duration: {
+                        type: Number
+                    },
                     animate: {
                         type: Number,
                         notify: true
                     },
-
-                    /**
-                     * The CSS media query to evaluate.
-                     */
-                    query: {
+                    fromStrokeWidth: {
+                        type: Number
+                    },
+                    toStrokeWidth: {
+                        type: Number
+                    },
+                    fromColor: {
+                        type: String
+                    },
+                    toColor: {
+                        type: String
+                    },
+                    drawNumber: {
+                        type: Boolean
+                    },
+                    numberPrefix: {
                         type: String,
-                        notify: true
+                        value: ''
+                    },
+                    numberSuffix: {
+                        type: String,
+                        value: ''
                     }
                 }
             }
+
             ready() {
                 super.ready();
-                var bar = new ProgressBar.Circle(this.shadowRoot.querySelector("#circle"), {
-                    color: '#aaa',
-                    // This has to be the same size as the maximum width to
-                    // prevent clipping
-                    strokeWidth: 4,
-                    trailWidth: 1,
-                    easing: 'easeInOut',
-                    duration: 1400,
-                    text: {
-                        autoStyleContainer: false
-                    },
-                    from: { color: '#aaa', width: 1 },
-                    to: { color: '#333', width: 4 },
-                    // Set default step function for all animate calls
-                    step: function(state, circle) {
+                var fromConfig = null;
+                var toConfig = null;
+                var stepConfig = null;
+
+                var drawText = this.drawNumber;
+                if ((this.fromColor && this.toColor) || (this.fromStrokeWidth && this.toStrokeWidth)) {
+                    fromConfig = {};
+                    toConfig = {};
+                    stepConfig = function (state, circle) {
                         circle.path.setAttribute('stroke', state.color);
                         circle.path.setAttribute('stroke-width', state.width);
-
-                        var value = Math.round(circle.value() * 100);
-                        if (value === 0) {
-                            circle.setText('');
-                        } else {
-                            circle.setText(value);
+                        if (drawText) {
+                            var value = Math.round(circle.value() * 100);
+                            if (value === 0) {
+                                circle.setText('');
+                            } else {
+                                circle.setText(this.numberPrefix + value + this.numberSuffix);
+                            }
                         }
-
                     }
-                });
-                bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-                bar.text.style.fontSize = '2rem';
-                bar.animate(1.0);
+                }
 
+                if (this.fromColor && this.toColor) {
+                    fromConfig.color = this.fromColor;
+                    toConfig.color = this.toColor;
+                }
+
+                if (this.fromStrokeWidth && this.toStrokeWidth) {
+                    fromConfig.width = this.fromStrokeWidth;
+                    toConfig.width = this.toStrokeWidth;
+                }
+
+                var bar = new ProgressBar.Circle(this, {
+                    color: this.color,
+                    trailColor: this.trailColor,
+                    strokeWidth: this.strokeWidth,
+                    trailWidth: this.trailWidth,
+                    easing: this.easing,
+                    duration: this.duration,
+                    from: fromConfig,
+                    to: toConfig,
+                    step: stepConfig
+                });
+
+                bar.set(this.animate);
+
+                this.addEventListener('animate-changed', function (ev) {
+                    bar.animate(this.animate);
+                });
             }
         }
+
         customElements.define(ProgressbarCircle.is, ProgressbarCircle);
     </script>
 </dom-module>
