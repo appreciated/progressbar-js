@@ -1,6 +1,12 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <script src="../../../../../webjars/progressbar.js/1.0.1/dist/progressbar.js"></script>
 <dom-module id="progressbar-circle">
+    <template>
+        <style>
+            ::slotted(svg) { overflow: visible; }
+        </style>
+        <slot></slot>
+    </template>
     <script>
         class ProgressbarCircle extends Polymer.Element {
             static get is() {
@@ -103,7 +109,7 @@
                     step: stepConfig
                 });
 
-                bar.set(this.animate);
+                //bar.set(this.animate);
 
                 this.addEventListener('animate-changed', function (ev) {
                     bar.animate(this.animate);

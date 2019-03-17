@@ -16,8 +16,7 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
         getElement()
                 .getStyle()
                 .set("position", "relative")
-                .set("overflow", "visible")
-                .set("padding","10px");
+                .set("overflow", "visible");
         setStrokeWidth(2);
         setTrailWidth(1);
         setColor("green");
