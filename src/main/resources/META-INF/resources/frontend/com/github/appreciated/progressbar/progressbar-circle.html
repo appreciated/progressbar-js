@@ -90,7 +90,7 @@
                         if (fromConfig && fromConfig.color && toConfig && toConfig.color) {
                             circle.path.setAttribute('stroke', state.color);
                         }
-                        if (fromConfig  && fromConfig.width && toConfig && toConfig.width) {
+                        if (fromConfig && fromConfig.width && toConfig && toConfig.width) {
                             circle.path.setAttribute('stroke-width', state.width);
                         }
                         if (drawText) {
@@ -124,7 +124,7 @@
                     config.from = fromConfig;
                     config.to = toConfig;
                 }
-                if (drawText) {
+                if ((this.fromColor && this.toColor) || (this.fromStrokeWidth && this.toStrokeWidth) || drawText) {
                     config.step = stepConfig;
                 }
                 var bar = new ProgressBar.Circle(this, config);
