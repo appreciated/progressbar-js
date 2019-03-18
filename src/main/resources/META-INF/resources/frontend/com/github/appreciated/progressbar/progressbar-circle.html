@@ -58,6 +58,9 @@
                     drawNumber: {
                         type: Boolean
                     },
+                    roundStroke: {
+                        type: Boolean
+                    },
                     numberPrefix: {
                         type: String,
                         value: ''
@@ -128,7 +131,9 @@
                     });
                 }
                 bar.animate(this.animate);
-
+                if (this.roundStroke) {
+                    bar.path.style.strokeLinecap = 'round';
+                }
                 this.addEventListener('animate-changed', function (ev) {
                     bar.animate(this.animate);
                 });
