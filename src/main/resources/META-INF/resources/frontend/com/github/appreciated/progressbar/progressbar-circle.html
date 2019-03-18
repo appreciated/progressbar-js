@@ -84,9 +84,15 @@
                 if ((this.fromColor && this.toColor) || (this.fromStrokeWidth && this.toStrokeWidth)) {
                     fromConfig = {};
                     toConfig = {};
+                }
+                if ((this.fromColor && this.toColor) || (this.fromStrokeWidth && this.toStrokeWidth) || drawText) {
                     stepConfig = function (state, circle) {
-                        circle.path.setAttribute('stroke', state.color);
-                        circle.path.setAttribute('stroke-width', state.width);
+                        if (fromConfig && fromConfig.color && toConfig && toConfig.color) {
+                            circle.path.setAttribute('stroke', state.color);
+                        }
+                        if (fromConfig  && fromConfig.width && toConfig && toConfig.width) {
+                            circle.path.setAttribute('stroke-width', state.width);
+                        }
                         if (drawText) {
                             var value = Math.round(circle.value() * 100);
                             console.log(value);
@@ -98,38 +104,31 @@
                         }
                     }
                 }
-
                 if (this.fromColor && this.toColor) {
                     fromConfig.color = this.fromColor;
                     toConfig.color = this.toColor;
                 }
-
                 if (this.fromStrokeWidth && this.toStrokeWidth) {
                     fromConfig.width = this.fromStrokeWidth;
                     toConfig.width = this.toStrokeWidth;
                 }
-                if (!fromConfig || !toConfig) {
-                    var bar = new ProgressBar.Circle(this, {
-                        color: this.color,
-                        trailColor: this.trailColor,
-                        strokeWidth: this.strokeWidth,
-                        trailWidth: this.trailWidth,
-                        easing: this.easing,
-                        duration: this.duration
-                    });
-                } else {
-                    var bar = new ProgressBar.Circle(this, {
-                        color: this.color,
-                        trailColor: this.trailColor,
-                        strokeWidth: this.strokeWidth,
-                        trailWidth: this.trailWidth,
-                        easing: this.easing,
-                        duration: this.duration,
-                        from: fromConfig,
-                        to: toConfig,
-                        step: stepConfig
-                    });
+                var config = {
+                    color: this.color,
+                    trailColor: this.trailColor,
+                    strokeWidth: this.strokeWidth,
+                    trailWidth: this.trailWidth,
+                    easing: this.easing,
+                    duration: this.duration
+                };
+                if (fromConfig && toConfig) {
+                    config.from = fromConfig;
+                    config.to = toConfig;
                 }
+                if (drawText) {
+                    config.step = stepConfig;
+                }
+                var bar = new ProgressBar.Circle(this, config);
+
                 bar.animate(this.animate);
                 if (this.roundStroke) {
                     bar.path.style.strokeLinecap = 'round';

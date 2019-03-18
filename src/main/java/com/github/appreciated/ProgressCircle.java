@@ -20,7 +20,6 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
         setEasing("easeInOut");
         setTrailColor("var(--lumo-contrast-10pct)");
         setDuration(1000);
-        setDrawNumber(true);
         setRoundStroke(true);
     }
 
