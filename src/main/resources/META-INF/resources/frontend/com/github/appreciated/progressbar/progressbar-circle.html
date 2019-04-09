@@ -95,12 +95,7 @@
                         }
                         if (drawText) {
                             var value = Math.round(circle.value() * 100);
-                            console.log(value);
-                            if (value === 0) {
-                                circle.setText('');
-                            } else {
-                                circle.setText(numberPrefix + "" + value + "" + numberSuffix);
-                            }
+                            circle.setText(numberPrefix + "" + value + "" + numberSuffix);
                         }
                     }
                 }
@@ -129,7 +124,10 @@
                 }
                 var bar = new ProgressBar.Circle(this, config);
 
-                bar.animate(this.animate);
+                // Workaround for animation issue when animating from 0.0 -> 0.0
+                if (bar.value().toFixed(2) !== this.animate.toFixed(2)) {
+                    bar.animate(this.animate);
+                }
                 if (this.roundStroke) {
                     bar.path.style.strokeLinecap = 'round';
                 }

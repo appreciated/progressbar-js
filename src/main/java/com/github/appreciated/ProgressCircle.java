@@ -10,17 +10,36 @@ import com.vaadin.flow.templatemodel.TemplateModel;
 @HtmlImport("frontend://com/github/appreciated/progressbar/progressbar-circle.html")
 public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircleModel> implements HasSize {
 
+    private double max;
+    private double value;
+    private double min;
+
     public ProgressCircle() {
-        setWidth("200px");
-        setHeight("200px");
-        getElement().getStyle().set("position", "relative");
-        setStrokeWidth(2);
-        setTrailWidth(2);
-        setColor("var(--lumo-primary-color)");
-        setEasing("easeInOut");
-        setTrailColor("var(--lumo-contrast-10pct)");
-        setDuration(1000);
-        setRoundStroke(true);
+        this(0.0D, 1.0D);
+    }
+
+    public ProgressCircle(double min, double max) {
+        this(min, max, min);
+    }
+
+    public ProgressCircle(double min, double max, double value) {
+        if (min >= max) {
+            throw new IllegalArgumentException(String.format("min ('%s') must be less than max ('%s')", min, max));
+        } else {
+            setMin(min);
+            setMax(max);
+            setValue(value);
+            setWidth("200px");
+            setHeight("200px");
+            getElement().getStyle().set("position", "relative");
+            setStrokeWidth(2);
+            setTrailWidth(2);
+            setColor("var(--lumo-primary-color)");
+            setEasing("easeInOut");
+            setTrailColor("var(--lumo-contrast-10pct)");
+            setDuration(1000);
+            setRoundStroke(true);
+        }
     }
 
     /**
@@ -79,21 +98,59 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
     }
 
     /**
-     * Sets whether the progress number is supposed to be drawn
-     *
-     * @param drawNumber passing true cause the number to be drawn
-     */
-    public void setDrawNumber(boolean drawNumber) {
-        getModel().setDrawNumber(drawNumber);
-    }
-
-    /**
      * whether the SVG stroke that is used for the progressbar is supposed to be round. True be default.
      *
      * @param roundStroke false will cause the stroke to have corners
      */
     public void setRoundStroke(boolean roundStroke) {
         getModel().setRoundStroke(roundStroke);
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+        setValue(getValue());
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+        setValue(getValue());
+    }
+
+    public double getValue() {
+        return this.value;
+    }
+
+    /**
+     * Sets the current progress of the Progressbar
+     *
+     * @param value
+     */
+    public void setValue(double value) {
+        this.value = value;
+        double min = this.getMin();
+        double max = this.getMax();
+        if (min <= value && value <= max) {
+            getModel().setAnimate((value - min) / (max - min));
+        } else {
+            throw new IllegalArgumentException(String.format("value must be between min ('%s') and max ('%s')", min, max));
+        }
+    }
+
+    /**
+     * Sets whether the progress number is supposed to be drawn
+     *
+     * @param drawNumber passing true cause the number to be drawn
+     */
+    public void setDrawNumber(boolean drawNumber) {
+        getModel().setDrawNumber(drawNumber);
     }
 
     /**
@@ -132,15 +189,6 @@ public class ProgressCircle extends PolymerTemplate<ProgressCircle.ProgressCircl
      */
     public void setToStrokeWidth(double strokeWidth) {
         getModel().setToStrokeWidth(strokeWidth);
-    }
-
-    /**
-     * Sets the current progress of the Progressbar
-     *
-     * @param progress
-     */
-    public void setProgress(double progress) {
-        getModel().setAnimate(progress);
     }
 
     /**
