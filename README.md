@@ -2,6 +2,8 @@
 
 Vaadin 10 Java integration of https://github.com/kimmobrunfeldt/progressbar.js
 
+## Abandoned in favor of [apexcharts.js](https://github.com/appreciated/apexcharts).
+
 ## Development instructions
 
 Starting the test/demo server:
